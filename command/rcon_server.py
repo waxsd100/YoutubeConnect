@@ -21,14 +21,10 @@ class RconServer:
     def disconnect(self):
         self.__session.disconnect()
 
-    @property  # @propertyとすると、ageプロパティのgetterとして定義できる
+    @property
     def session(self):
         return self.__session
 
-    @session.setter  # nameプロパティのsetterとして定義する
-    def session(self, value):
-        print("setterを呼び出しました")
-        self.__session = value  # privateの変数、__nameを設定する
-
-
-rcon = RconServer()
+    @session.setter
+    def session(self, session):
+        self.__session = session
