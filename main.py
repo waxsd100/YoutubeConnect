@@ -17,7 +17,7 @@ def main(chat):
     rc = RconServer()
     rc.connect()
     text_message = TextMessage(rc)
-
+    connect_command(rc)
     try:
         while chat.is_alive():
             for c in chat.get().sync_items():
@@ -39,26 +39,29 @@ def main(chat):
         print("chat data finished")
     except Exception as e:
         print(type(e), str(e))
+    finally:
+        disconnect_command(rc)
+        rc.disconnect()
 
 
-def connect_command():
+def connect_command(rc):
     """
     初回コマンド送信用
     :param mcr: mcrcon instance
     :return: mcr response
     """
-    pass
-    # return mcrcon.command(f"say [Debug] Connect Server: https://www.youtube.com/watch?v={YOUTUBE_VIDEO_ID}")
+    # pass
+    return rc.exec(f"say [Debug] Connect Server: https://www.youtube.com/watch?v={YOUTUBE_VIDEO_ID}")
     # return mcrcon.command(f"function #mc_comment_viewer:on")
 
 
-def disconnect_command():
+def disconnect_command(rc):
     """
     初回コマンド送信用
     :param mcr: mcrcon instance
     :return: mcr response
     """
-    # return mcrcon.command(f"say [Debug] Disconnect Server: https://www.youtube.com/watch?v={YOUTUBE_VIDEO_ID}")
+    return rc.exec(f"say [Debug] Disconnect Server: https://www.youtube.com/watch?v={YOUTUBE_VIDEO_ID}")
     # return mcrcon.command(f"function #mc_comment_viewer:on")
 
 
@@ -87,13 +90,12 @@ def open_browser(driver, url):
 
 if __name__ == '__main__':
     chat = pytchat.create(video_id=YOUTUBE_VIDEO_ID, logger=config.logger(__name__, logging.DEBUG))
-    # driver = get_web_driver()
-    # open_browser(driver=driver, url=f"https://www.youtube.com/live_chat?v={YOUTUBE_VIDEO_ID}")
+    driver = get_web_driver()
+    open_browser(driver=driver, url=f"https://www.youtube.com/live_chat?v={YOUTUBE_VIDEO_ID}")
     main(chat)
-
+    chat.terminate()
     # f"data modify storage mc_comment_viewer: new_comments append value "
     # f'{mes}'
-    chat.terminate()
-    # rcon.disconnect()
-    # driver.close()
-    # driver.quit()
+
+    driver.close()
+    driver.quit()
