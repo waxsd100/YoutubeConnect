@@ -1,0 +1,2 @@
+class NewSponsor:
+    pass
