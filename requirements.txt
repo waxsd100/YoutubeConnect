@@ -1,0 +1,4 @@
+emoji==1.6.1
+mcrcon==0.7.0
+pytchat==0.5.5
+selenium==4.0.0
