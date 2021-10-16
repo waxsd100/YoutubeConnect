@@ -1,4 +1,4 @@
-# MCCommentServer
+# LiveToMineServerCommandServer(LTMSC)
 
 ## Requirements
 Python 3.9
