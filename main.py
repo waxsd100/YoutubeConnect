@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-### Copyright © 2021 wakokara
-### This software is released under the MIT License, see LICENSE.
 import hashlib
 import logging
+import re
 
 import emoji
 import pytchat
@@ -17,7 +15,6 @@ from selenium.webdriver.firefox import service as fs
 from const import YOUTUBE_VIDEO_ID, RCON_PASSWORD, RCON_HOST, RCON_PORT, RCON_TIMEOUT
 
 
-# require mcrcon, pytchat, emoji
 def main(chat, mcr):
     message_start(mcr)
     try:
@@ -26,8 +23,9 @@ def main(chat, mcr):
                 id = hashlib.md5(c.id.encode()).hexdigest()
                 print(f"{c.datetime} {id} {c.type} {c.author.name} {c.message} {c.amountString}")
                 if c.type == "textMessage":
-                    mes = create_message(c.author.name, c.message)
-                    mes = trim_message(mes)
+                    message = trim_message(c.message)
+                    message = emoji.emojize(message, use_aliases=True)
+                    mes = create_message(c.author.name, message)
                     if mes:
                         send_mc(mcr, mes)
                 else:
@@ -46,7 +44,7 @@ def create_message(name, text):
     :param text:
     :return:
     """
-    return f'{{from:"YouTube",name:"{name}",text:["{text}"]}}'
+    return str(f'{{from:"YouTube",name:"{name}",text:["{text}"]}}')
 
 
 def trim_message(message):
@@ -55,33 +53,32 @@ def trim_message(message):
     :param message:
     :return:
     """
-    # m = delete_emoji_message(m)
-    m = replace_full_space_to_half_space(message)
-    m = emoji.emojize(m, use_aliases=True)
+    m = replace_half_space(message)
+    m = delete_emoji_message(m)
+    m = m.strip('"')
+    m = m.strip("'")
     return m
 
 
 def delete_emoji_message(message):
     """
-    ::形式のemoji を削除する
+    :emoji:形式のemoji を削除する
     :param message:
     :return:
     """
-    p = r'\:[^*]:\*'
-    return message.replace(p, '')
+    p = r'\:(.*?)\:'  # 非貪欲マッチ（最小マッチ）
+    for m in re.findall(p, message):
+        message = message.replace(f":{m}:", ' ')
+    return message
 
 
-def replace_full_space_to_half_space(message):
+def replace_half_space(message):
     """
     タブ文字と全角空白 を半角スペースに変換する
     :param message:
     :return:
     """
-    table = str.maketrans({
-        ' ': ' ',
-        '\t': ' '
-    })
-    return message.translate(table)
+    return " ".join(message.split())
 
 
 def send_mc(mcr, data):
@@ -91,6 +88,7 @@ def send_mc(mcr, data):
     :param data: message data (string型のJson形式)
     :return: mcr response
     """
+    # pass
     return mcr.command(f"data modify storage mc_comment_viewer: new_comments append value "
                        f'{data}')
 
@@ -101,7 +99,8 @@ def message_start(mcr):
     :param mcr: mcrcon instance
     :return: mcr response
     """
-    return mcr.command(f"say [Debug] Connect Server: https://www.youtube.com/watch?v={YOUTUBE_VIDEO_ID}")
+    pass
+    # return mcr.command(f"say [Debug] Connect Server: https://www.youtube.com/watch?v={YOUTUBE_VIDEO_ID}")
     # return mcr.command(f"function #mc_comment_viewer:on")
 
 
