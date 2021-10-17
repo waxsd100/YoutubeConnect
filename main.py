@@ -8,26 +8,27 @@ from selenium import webdriver
 # from selenium.webdriver.chrome import service as cs
 from selenium.webdriver.firefox import service as fs
 
-from command.rcon_server import RconServer
 from command.text_message import TextMessage
-from const import YOUTUBE_VIDEO_ID
+from const import YOUTUBE_VIDEO_ID, isOpenBrowser
+from lib.rcon_server import RconServer
 
 
 def main(chat):
-    rc = RconServer()
-    rc.connect()
-    text_message = TextMessage(rc)
-    connect_command(rc)
     try:
+        rc = RconServer()
+        rc.connect()
+        text_message = TextMessage(rc)
+        connect_command(rc)
         while chat.is_alive():
             for c in chat.get().sync_items():
                 chat_type = c.type
                 # id = hashlib.md5(c.id.encode()).hexdigest()
-
+                # TODO ちゃんとオーバライドさせる
                 if chat_type == "superChat":
                     pass
                 elif chat_type == "textMessage":
-                    text_message.view_chat(c)
+                    text_message.view_message(c)
+                    # text_message.view_chat(c)
                     pass
                 elif chat_type == "superSticker":
                     pass
@@ -90,12 +91,11 @@ def open_browser(driver, url):
 
 if __name__ == '__main__':
     chat = pytchat.create(video_id=YOUTUBE_VIDEO_ID, logger=config.logger(__name__, logging.DEBUG))
-    driver = get_web_driver()
-    open_browser(driver=driver, url=f"https://www.youtube.com/live_chat?v={YOUTUBE_VIDEO_ID}")
+    if isOpenBrowser:
+        driver = get_web_driver()
+        open_browser(driver=driver, url=f"https://www.youtube.com/live_chat?v={YOUTUBE_VIDEO_ID}")
     main(chat)
     chat.terminate()
-    # f"data modify storage mc_comment_viewer: new_comments append value "
-    # f'{mes}'
-
-    driver.close()
-    driver.quit()
+    if isOpenBrowser:
+        driver.close()
+        driver.quit()
