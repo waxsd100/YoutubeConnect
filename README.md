@@ -24,8 +24,6 @@ pychat をもとに作成されています。
 Youtubeメッセージを受信すると  
 Commandパッケージ直下にある、Classが呼び出されます。
 
-chat_type はpychat のTypeに準拠します。 "superChat","textMessage","superSticker","newSponsor"
-
 data format
 
 <table>
