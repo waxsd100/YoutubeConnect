@@ -155,7 +155,7 @@ pip install -r requirements.txt
 
 ## Contribution
 
-@Aiakaishi
+[Ai-Akaishi](https://github.com/Ai-Akaishi)
 
 ## Licence
 
