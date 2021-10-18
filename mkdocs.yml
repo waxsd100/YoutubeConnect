@@ -1,0 +1,19 @@
+site_name: LiveToMineServer
+site_description: Sample project generated from Jace's Python Template.
+site_author: wakokara
+
+repo_url: https://github.com/waxsd100/LiveToMineServer
+edit_uri: https://github.com/waxsd100/LiveToMineServer/edit/main/docs
+
+theme: readthedocs
+
+markdown_extensions:
+  - codehilite
+
+nav:
+  - Home: index.md
+  - Advanced: advanced.md
+  - About:
+    - Release Notes: about/changelog.md
+    - Contributing: about/contributing.md
+    - License: about/license.md
