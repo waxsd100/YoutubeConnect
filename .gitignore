@@ -129,3 +129,5 @@ dmypy.json
 .pyre/
 /geckodriver.log
 /log.txt
+
+.idea/

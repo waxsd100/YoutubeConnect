@@ -10,7 +10,7 @@ from selenium.webdriver.firefox import service as fs
 
 from command.text_message import TextMessage
 from const import YOUTUBE_VIDEO_ID, isOpenBrowser
-from lib.rcon_server import RconServer
+from library.rcon_server import RconServer
 
 
 def main(chat):
@@ -22,7 +22,7 @@ def main(chat):
         while chat.is_alive():
             for c in chat.get().sync_items():
                 chat_type = c.type
-                # id = hashlib.md5(c.id.encode()).hexdigest()
+                # id = hashlibrary.md5(c.id.encode()).hexdigest()
                 # TODO ちゃんとオーバライドさせる
                 if chat_type == "superChat":
                     pass

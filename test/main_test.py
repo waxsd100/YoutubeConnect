@@ -6,7 +6,7 @@ This software is released under the MIT License, see LICENSE.
 """
 import unittest
 
-from lib.comment_parse import make_send_json, parse_send_message
+from library.comment_parse import make_send_json, parse_send_message
 
 
 class MessageTestCase(unittest.TestCase):

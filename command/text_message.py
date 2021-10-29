@@ -1,4 +1,4 @@
-from lib.comment_parse import make_send_json, parse_send_message
+from library.comment_parse import make_send_json, parse_send_message
 
 
 class TextMessage:

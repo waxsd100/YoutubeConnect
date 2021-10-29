@@ -4,6 +4,11 @@ import emoji
 
 
 def parse_send_message(message):
+    """
+    送信用Textメッセージを作成
+    :param message:
+    :return:
+    """
     message = trim_message(message)
     message = emoji.emojize(message, use_aliases=True)
     message = delete_emoji_message(message)
@@ -15,6 +20,12 @@ def parse_send_message(message):
 
 
 def make_send_json(author, message):
+    """
+    送信用Jsonデータを作成する
+    :param author:
+    :param message:
+    :return:
+    """
     mes = create_message(author, message)
     if mes and message is not None:
         return mes
