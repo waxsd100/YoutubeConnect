@@ -1,5 +1,25 @@
 import re
 
+import emoji
+
+
+def parse_send_message(message):
+    message = trim_message(message)
+    message = emoji.emojize(message, use_aliases=True)
+    message = delete_emoji_message(message)
+    message = replace_space_to_mcspace(message)
+    if message and message.strip() and message != "␣":
+        print(message)
+        return message
+    return None
+
+
+def make_send_json(author, message):
+    mes = create_message(author, message)
+    if mes and message is not None:
+        return mes
+    return None
+
 
 def create_message(name, text):
     """
@@ -13,14 +33,13 @@ def create_message(name, text):
 
 def trim_message(message):
     """
-    必要のないメッセージ文字列を削除する
+    必要のないメッセージ文字列をスペースに変換する
     :param message:
     :return:
     """
     m = replace_half_space(message)
-    m = delete_emoji_message(m)
-    m = m.strip('"')
-    m = m.strip("'")
+    m = m.replace('"', '␣')
+    m = m.replace("'", '␣')
     return m
 
 
@@ -32,7 +51,7 @@ def delete_emoji_message(message):
     """
     p = r'\:(.*?)\:'  # 非貪欲マッチ（最小マッチ）
     for m in re.findall(p, message):
-        message = message.replace(f":{m}:", ' ')
+        message = message.replace(f":{m}:", '␣')
     return message
 
 
@@ -43,3 +62,12 @@ def replace_half_space(message):
     :return:
     """
     return " ".join(message.split())
+
+
+def replace_space_to_mcspace(message):
+    """
+    タブ文字と全角空白 を半角スペースに変換する
+    :param message:
+    :return:
+    """
+    return message.replace(' ', '␣')

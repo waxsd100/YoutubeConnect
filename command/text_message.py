@@ -1,6 +1,4 @@
-import emoji
-
-from lib.comment_parse import trim_message, create_message
+from lib.comment_parse import make_send_json, parse_send_message
 
 
 class TextMessage:
@@ -9,11 +7,11 @@ class TextMessage:
 
     def view_chat(self, chat):
         rc = self.__rcon
-        message = trim_message(chat.message)
-        message = emoji.emojize(message, use_aliases=True)
-        mes = create_message(chat.author.name, message)
-        if mes:
-            rc.exec(f"data modify storage mc_comment_viewer: new_comments append value {mes}")
+        message = make_send_json(chat.author.name, parse_send_message(chat.message))
+        if message is not None:
+            rc.exec(f"data modify storage mc_comment_viewer: new_comments append value {message}")
+        else:
+            print(f"No send Message: {chat.author.name} / {chat.message}")
 
     def view_message(self, chat):
         rc = self.__rcon
