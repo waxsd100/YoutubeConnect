@@ -14,7 +14,6 @@ def parse_send_message(message):
     message = delete_emoji_message(message)
     message = replace_space_to_mcspace(message)
     if message and message.strip() and message != "␣":
-        print(message)
         return message
     return None
 
