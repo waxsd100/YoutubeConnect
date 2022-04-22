@@ -1,19 +1,21 @@
-from library.comment_parse import make_send_json, parse_send_message
+import hashlib
+import json
+
+from library.comment_parse import parse_send_message
+from model.youtube_chat_moddel import YoutubeChatModel
 
 
-class TextMessage:
+class TextMessage(YoutubeChatModel):
     def __init__(self, rcon):
+        super().__init__(rcon)
         self.__rcon = rcon
 
     def view_chat(self, chat):
         rc = self.__rcon
-        message = make_send_json(chat.author.name, parse_send_message(chat.message))
+        id = hashlib.md5(chat.id.encode()).hexdigest()
+        message = {'from': 'YouTube', 'id': id, 'name': chat.author.name, 'text': [parse_send_message(chat.message)]}
+        data = json.dumps(message, ensure_ascii=False)
         if message is not None:
-            rc.exec(f"data modify storage mc_comment_viewer: new_comments append value {message}")
+            rc.exec(f"data modify storage mc_comment_viewer: new_comments append value {data}")
         else:
             print(f"No send Message: {chat.author.name} / {chat.message}")
-
-    def view_message(self, chat):
-        rc = self.__rcon
-        data = chat.json()
-        rc.exec(f"say {data}")

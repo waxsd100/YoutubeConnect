@@ -20,7 +20,7 @@ def parse_send_message(message):
 
 def make_send_json(author, message):
     """
-    送信用Jsonデータを作成する
+    送信用Jsonデータを作成する(非推奨）
     :param author:
     :param message:
     :return:
@@ -33,7 +33,7 @@ def make_send_json(author, message):
 
 def create_message(name, text):
     """
-    送信用データを作成
+    送信用データを作成(非推奨）
     :param name:
     :param text:
     :return:

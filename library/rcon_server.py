@@ -2,7 +2,7 @@ from time import sleep
 
 from mcrcon import MCRcon
 
-from const import RCON_HOST, RCON_PASSWORD, RCON_PORT, RCON_TIMEOUT
+from const import RCON_HOST, RCON_PASSWORD, RCON_PORT, RCON_TIMEOUT, YOUTUBE_VIDEO_ID
 
 
 class RconServer:
@@ -34,3 +34,24 @@ class RconServer:
     @session.setter
     def session(self, session):
         self.__session = session
+
+
+def connect_command(rc):
+    """
+    初回コマンド送信用
+    :param rc: mcrcon instance
+    :return: mcr response
+    """
+    # pass
+    return rc.exec(f"say [Debug] Connect Server: https://www.youtube.com/watch?v={YOUTUBE_VIDEO_ID}")
+    # return mcrcon.command(f"function #mc_comment_viewer:on")
+
+
+def disconnect_command(rc):
+    """
+    初回コマンド送信用
+    :param mcr: mcrcon instance
+    :return: mcr response
+    """
+    return rc.exec(f"say [Debug] Disconnect Server: https://www.youtube.com/watch?v={YOUTUBE_VIDEO_ID}")
+    # return mcrcon.command(f"function #mc_comment_viewer:on")
