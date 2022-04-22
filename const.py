@@ -6,16 +6,16 @@ This software is released under the MIT License, see LICENSE.
 """
 
 # Youtube Video ID
-YOUTUBE_VIDEO_ID = "############"
+YOUTUBE_VIDEO_ID = "fPuxw2dkOow"
 
 # Rcon Server Host
-RCON_HOST = "127.0.0.1"
+RCON_HOST = "45.32.255.1"
 
 # Rcon Server Port
 RCON_PORT = 25575
 
 # Rcon Server Password
-RCON_PASSWORD = "my_password"
+RCON_PASSWORD = "tusbUnusual"
 
 # Rcon Server Timeout
 RCON_TIMEOUT = 5
