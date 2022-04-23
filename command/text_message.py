@@ -10,9 +10,6 @@ class TextMessage(YoutubeChatModel):
         super().__init__(rcon)
         self.__rcon = rcon
 
-    def view_message(self, chat):
-        self.view_message(chat)
-
     def view_chat(self, chat):
         rc = self.__rcon
         id = hashlib.md5(chat.id.encode()).hexdigest()
