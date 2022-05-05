@@ -6,6 +6,9 @@ import logging
 import pytchat
 from pytchat import config
 
+from command.new_sponsor import NewSponsor
+from command.super_chat import SuperChat
+from command.super_sticker import SuperSticker
 from command.text_message import TextMessage
 from const import YOUTUBE_VIDEO_ID, isOpenBrowser
 from library.browser_util import get_web_driver, open_browser
@@ -28,7 +31,10 @@ def init():
 
 def main():
     init()
+    super_chat = SuperChat(rc)
     text_message = TextMessage(rc)
+    super_sticker = SuperSticker(rc)
+    new_sponsor = NewSponsor(rc)
     try:
         connect_command(rc)
         while chat.is_alive():
@@ -37,16 +43,19 @@ def main():
                 id = hashlib.md5(c.id.encode()).hexdigest()
                 if chat_type == "superChat":
                     # スーパチャット時のClass呼び出し処理
+                    super_chat.send_view_chat_command(c)
                     pass
                 elif chat_type == "textMessage":
                     # 通常チャット送信時のClass呼び出し処理
-                    text_message.view_chat(c)
+                    text_message.send_data_command(c)
                     pass
                 elif chat_type == "superSticker":
                     # スーパスティッカー送信時のClass呼び出し処理
+                    super_sticker.send_view_chat_command(c)
                     pass
                 elif chat_type == "newSponsor":
                     # メンバー登録時のClass呼び出し処理
+                    new_sponsor.send_view_chat_command(c)
                     pass
 
                 print(f"{c.datetime} {id} {c.type} {c.author.name} {c.message} {c.amountString}")
