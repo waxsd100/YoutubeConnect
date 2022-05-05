@@ -8,6 +8,9 @@ This software is released under the MIT License, see LICENSE.
 # Youtube Video ID
 YOUTUBE_VIDEO_ID = "############"
 
+# 送信されるときのスペース文字の置換後文字列
+SPACE_STRING = "␣"
+
 # Rcon Server Host
 RCON_HOST = "127.0.0.1"
 

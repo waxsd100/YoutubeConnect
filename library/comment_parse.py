@@ -2,6 +2,8 @@ import re
 
 import emoji
 
+from const import SPACE_STRING
+
 
 def parse_send_message(message):
     """
@@ -13,7 +15,7 @@ def parse_send_message(message):
     message = emoji.emojize(message, use_aliases=True)
     message = delete_emoji_message(message)
     message = replace_space_to_mcspace(message)
-    if message and message.strip() and message != "␣":
+    if message and message.strip() and message != SPACE_STRING:
         return message
     return None
 
@@ -48,8 +50,8 @@ def trim_message(message):
     :return:
     """
     m = replace_half_space(message)
-    m = m.replace('"', '␣')
-    m = m.replace("'", '␣')
+    m = m.replace('"', SPACE_STRING)
+    m = m.replace("'", SPACE_STRING)
     return m
 
 
@@ -61,7 +63,7 @@ def delete_emoji_message(message):
     """
     p = r'\:(.*?)\:'  # 非貪欲マッチ（最小マッチ）
     for m in re.findall(p, message):
-        message = message.replace(f":{m}:", '␣')
+        message = message.replace(f":{m}:", SPACE_STRING)
     return message
 
 
@@ -80,4 +82,4 @@ def replace_space_to_mcspace(message):
     :param message:
     :return:
     """
-    return message.replace(' ', '␣')
+    return message.replace(' ', SPACE_STRING)
