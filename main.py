@@ -36,13 +36,17 @@ def main():
                 chat_type = c.type
                 id = hashlib.md5(c.id.encode()).hexdigest()
                 if chat_type == "superChat":
+                    # スーパチャット時のClass呼び出し処理
                     pass
                 elif chat_type == "textMessage":
+                    # 通常チャット送信時のClass呼び出し処理
                     text_message.view_chat(c)
                     pass
                 elif chat_type == "superSticker":
+                    # スーパスティッカー送信時のClass呼び出し処理
                     pass
                 elif chat_type == "newSponsor":
+                    # メンバー登録時のClass呼び出し処理
                     pass
 
                 print(f"{c.datetime} {id} {c.type} {c.author.name} {c.message} {c.amountString}")
