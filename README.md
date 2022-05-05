@@ -8,7 +8,7 @@ command フォルダの中身のClassを拡張することで送信内容を変�
 
 ## Demo
 
-TODO
+なんかDemo動画か何か作って To赤石さん
 
 ## Requirement
 
