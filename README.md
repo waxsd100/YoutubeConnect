@@ -162,3 +162,5 @@ pip install -r requirements.txt
 ## Author
 
 [wakokara](https://twitter.com/@wakokara)
+
+このプログラムと観測結果は研究目的のためのものです。研究・教育用途のみにてお使いください。これらを利用したことにより生じた責任は負いかねます
