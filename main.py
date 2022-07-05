@@ -50,6 +50,14 @@ def main():
                     # メンバー登録時のClass呼び出し処理
                     new_sponsor.send_view_chat_command(c)
                     pass
+                elif chat_type == "giftRedemption":
+                    # メンバーシップギフト受信(誰かが受け取った)時のClass呼び出し処理
+                    # TODO no member class
+                    pass
+                elif chat_type == "giftPurchase":
+                    # メンバーシップギフト送信(誰かが送信した)時のClass呼び出し処理
+                    # TODO no member class
+                    pass
 
                 print(f"{c.datetime} {id} {c.type} {c.author.name} {c.message} {c.amountString}")
     except pytchat.ChatdataFinished:
