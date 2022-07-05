@@ -6,6 +6,8 @@ import logging
 import pytchat
 from pytchat import config
 
+from command.gift_purchase import GiftRedemption
+from command.gift_redemption import GiftPurchase
 from command.new_sponsor import NewSponsor
 from command.super_chat import SuperChat
 from command.super_sticker import SuperSticker
@@ -28,6 +30,9 @@ def main():
     text_message = TextMessage(rc)
     super_sticker = SuperSticker(rc)
     new_sponsor = NewSponsor(rc)
+    gift_redemption = GiftRedemption(rc)
+    gift_purchase = GiftPurchase(rc)
+
     try:
         connect_command(rc)
         while chat.is_alive():
@@ -53,10 +58,11 @@ def main():
                 elif chat_type == "giftRedemption":
                     # メンバーシップギフト受信(誰かが受け取った)時のClass呼び出し処理
                     # TODO no member class
+                    gift_redemption.send_view_chat_command(c)
                     pass
                 elif chat_type == "giftPurchase":
                     # メンバーシップギフト送信(誰かが送信した)時のClass呼び出し処理
-                    # TODO no member class
+                    gift_purchase.send_view_chat_command(c)
                     pass
 
                 print(f"{c.datetime} {id} {c.type} {c.author.name} {c.message} {c.amountString}")
