@@ -18,19 +18,12 @@ from model.youtube_chat_moddel import YoutubeChatModel
 global chat, rc
 
 
-def init():
-    try:
-        global chat, rc
-        chat = pytchat.create(video_id=YOUTUBE_VIDEO_ID, logger=config.logger(__name__, logging.DEBUG))
-        rc = RconServer()
-        rc.connect()
-        YoutubeChatModel(rcon=rc)
-    except Exception as e:
-        print(e)
-
-
 def main():
-    init()
+    global chat, rc
+    chat = pytchat.create(video_id=YOUTUBE_VIDEO_ID, logger=config.logger(__name__, logging.DEBUG))
+    rc = RconServer()
+    rc.connect()
+    YoutubeChatModel(rcon=rc)
     super_chat = SuperChat(rc)
     text_message = TextMessage(rc)
     super_sticker = SuperSticker(rc)
