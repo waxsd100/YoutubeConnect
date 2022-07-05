@@ -18,19 +18,12 @@ from model.youtube_chat_moddel import YoutubeChatModel
 global chat, rc
 
 
-def init():
-    try:
-        global chat, rc
-        chat = pytchat.create(video_id=YOUTUBE_VIDEO_ID, logger=config.logger(__name__, logging.DEBUG))
-        rc = RconServer()
-        rc.connect()
-        YoutubeChatModel(rcon=rc)
-    except Exception as e:
-        print(e)
-
-
 def main():
-    init()
+    global chat, rc
+    chat = pytchat.create(video_id=YOUTUBE_VIDEO_ID, logger=config.logger(__name__, logging.DEBUG))
+    rc = RconServer()
+    rc.connect()
+    YoutubeChatModel(rcon=rc)
     super_chat = SuperChat(rc)
     text_message = TextMessage(rc)
     super_sticker = SuperSticker(rc)
@@ -56,6 +49,14 @@ def main():
                 elif chat_type == "newSponsor":
                     # メンバー登録時のClass呼び出し処理
                     new_sponsor.send_view_chat_command(c)
+                    pass
+                elif chat_type == "giftRedemption":
+                    # メンバーシップギフト受信(誰かが受け取った)時のClass呼び出し処理
+                    # TODO no member class
+                    pass
+                elif chat_type == "giftPurchase":
+                    # メンバーシップギフト送信(誰かが送信した)時のClass呼び出し処理
+                    # TODO no member class
                     pass
 
                 print(f"{c.datetime} {id} {c.type} {c.author.name} {c.message} {c.amountString}")
