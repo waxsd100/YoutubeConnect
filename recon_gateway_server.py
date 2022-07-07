@@ -1,7 +1,5 @@
-from typing import Union
-
 from fastapi import FastAPI
-from fastapi import Header
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -11,9 +9,19 @@ async def root():
     return {"message": "Hello World"}
 
 
+# リクエストbodyを定義
+class Comment(BaseModel):
+    id: int
+    dt: str
+    vid: str
+    payload: str
+
+
 @app.post("/send")
-async def send(x_channel_id: Union[str, None] = Header(default=None)):
-    return {"X-CHANNEL-ID values": x_channel_id}
+# x_channel_id: Union[str, None] = Header(default=None)
+async def send(comment: Comment):
+    print(comment)
+    return {"X-CHANNEL-ID values": "x_channel_id"}
 
 # {
 #     "id" : "",

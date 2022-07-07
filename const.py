@@ -6,7 +6,13 @@ This software is released under the MIT License, see LICENSE.
 """
 
 # Youtube Video ID
-YOUTUBE_VIDEO_ID = "############"
+YOUTUBE_VIDEO_ID = ["############", "############"]
+
+# Gateway Data channel Id
+CHANNEL_ID = ["############", "############"]
+
+# Gateway Data channel Name
+CHANNEL_NAME = ["############", "############"]
 
 # 送信されるときのスペース文字の置換後文字列
 SPACE_STRING = "␣"

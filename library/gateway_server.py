@@ -29,17 +29,18 @@ def resend(function):
 
 class GatewayServer:
 
-    def __init__(self, request):
-        self.__session = request.Session()
+    def __init__(self):
+        self.__session = requests
+        requests.Session()
 
     @resend
     def post_json(self, url, headers, data):
         return self.__session.post(
             url=url,
             headers=headers,
-            json=data,
+            data=data,
             timeout=API_TIMEOUT
-        ).raise_for_status()
+        )
 
     @property
     def session(self):
