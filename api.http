@@ -1,0 +1,7 @@
+POST http://localhost:8000/send
+Content-Type: application/json
+X-CHANNEL-ID: KHAw08AqKc0
+
+{}
+
+###

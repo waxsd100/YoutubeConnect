@@ -17,24 +17,17 @@ from const import YOUTUBE_VIDEO_ID, isOpenBrowser
 from define.enum_youtube import ChatType
 from library.browser_util import get_web_driver, open_browser
 from library.rcon_server import RconServer, disconnect_command, connect_command
-from model.youtube_chat_moddel import YoutubeChatModel
 
-global chat, rc
+global chat
 
 
 def main():
-    global chat, rc
+    global chat
     chat = pytchat.create(video_id=YOUTUBE_VIDEO_ID, logger=config.logger(__name__, logging.DEBUG))
     rc = RconServer()
     rc.connect()
-    YoutubeChatModel(rcon=rc)
-    super_chat = SuperChat(rc)
-    text_message = TextMessage(rc)
-    super_sticker = SuperSticker(rc)
-    new_sponsor = NewSponsor(rc)
-    gift_redemption = GiftRedemption(rc)
-    gift_purchase = GiftPurchase(rc)
     try:
+        rc.connect()
         connect_command(rc)
         while chat.is_alive():
             for c in chat.get().sync_items():
@@ -42,31 +35,37 @@ def main():
                 id = hashlib.md5(c.id.encode()).hexdigest()
                 if chat_type == ChatType.SUPER_CHAT.value:
                     # スーパチャット時のClass呼び出し処理
+                    super_chat = SuperChat(rc)
                     super_chat.send_view_chat_command(c)
                     pass
                 elif chat_type == ChatType.TEXT_MESSAGE.value:
                     # 通常チャット送信時のClass呼び出し処理
-                    text_message.send_data_command(c)
+                    text_message = TextMessage(rc)
+                    text_message.send_view_chat_command(c)
                     pass
                 elif chat_type == ChatType.SUPER_STICKER.value:
                     # スーパスティッカー送信時のClass呼び出し処理
+                    super_sticker = SuperSticker(rc)
                     super_sticker.send_view_chat_command(c)
                     pass
                 elif chat_type == ChatType.NEW_SPONSOR.value:
                     # メンバー登録時のClass呼び出し処理
+                    new_sponsor = NewSponsor(rc)
                     new_sponsor.send_view_chat_command(c)
                     pass
                 elif chat_type == ChatType.GIFT_REDEMPTION.value:
                     # メンバーシップギフト受信(誰かが受け取った)時のClass呼び出し処理
+                    gift_redemption = GiftRedemption(rc)
                     gift_redemption.send_view_chat_command(c)
                     pass
                 elif chat_type == ChatType.GIFT_PURCHASE.value:
                     # メンバーシップギフト送信(誰かが送信した)時のClass呼び出し処理
+                    gift_purchase = GiftPurchase(rc)
                     gift_purchase.send_view_chat_command(c)
                     pass
                 else:
-                    print('Error: unsupported chat type', file=sys.stderr)
-                print(f"{c.datetime} {id} {c.type} {c.author.name} {c.message} {c.amountString}")
+                    print(f'Error: unsupported chat type {chat_type}', file=sys.stderr)
+                print(f"{c.datetime} {id} {c.type} {c.author.name}: {c.message} {c.amountString}")
     except pytchat.ChatdataFinished:
         print("chat data finished")
     except Exception as e:
@@ -75,6 +74,10 @@ def main():
         chat.terminate()
         disconnect_command(rc)
         rc.disconnect()
+
+
+def gateway_exec():
+    pass
 
 
 if __name__ == '__main__':

@@ -25,3 +25,6 @@ RCON_TIMEOUT = 5
 
 # Debug
 isOpenBrowser = False
+
+# Gateway Server Timeout
+API_TIMEOUT = 60

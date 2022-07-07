@@ -1,7 +1,7 @@
-from model.youtube_chat_moddel import YoutubeChatModel
+from model.rcon_client_model import RconClientModel
 
 
-class SuperChat(YoutubeChatModel):
+class SuperChat(RconClientModel):
     """
     スーパチャット受信時の処理
     """

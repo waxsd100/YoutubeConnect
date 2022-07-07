@@ -1,7 +1,7 @@
-from model.youtube_chat_moddel import YoutubeChatModel
+from model.rcon_client_model import RconClientModel
 
 
-class SuperSticker(YoutubeChatModel):
+class SuperSticker(RconClientModel):
     """
     スーパスティッカー受信時の処理
     """

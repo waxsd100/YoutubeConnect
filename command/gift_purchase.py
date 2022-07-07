@@ -1,7 +1,7 @@
-from model.youtube_chat_moddel import YoutubeChatModel
+from model.rcon_client_model import RconClientModel
 
 
-class GiftRedemption(YoutubeChatModel):
+class GiftRedemption(RconClientModel):
     """
     メンバーシップギフト受信(誰かが受け取った)時の処理
     """

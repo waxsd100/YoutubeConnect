@@ -8,32 +8,32 @@ from const import RCON_HOST, RCON_PASSWORD, RCON_PORT, RCON_TIMEOUT, YOUTUBE_VID
 class RconServer:
 
     def __init__(self):
-        self.__session = MCRcon(host=RCON_HOST, password=RCON_PASSWORD, port=RCON_PORT, timeout=RCON_TIMEOUT)
+        self.__rcon = MCRcon(host=RCON_HOST, password=RCON_PASSWORD, port=RCON_PORT, timeout=RCON_TIMEOUT)
 
     def connect(self):
-        self.__session.connect()
+        self.__rcon.connect()
 
     def reconnect(self, session, is_force):
         if is_force:
-            self.__session.disconnect()
+            self.__rcon.disconnect()
             sleep(3)
-            self.__session.connect()
+            self.__rcon.connect()
         else:
-            self.__session = session
+            self.__rcon = session
 
     def exec(self, cmd):
-        self.__session.command(cmd)
+        self.__rcon.command(cmd)
 
     def disconnect(self):
-        self.__session.disconnect()
+        self.__rcon.disconnect()
 
     @property
-    def session(self):
-        return self.__session
+    def rcon(self):
+        return self.__rcon
 
-    @session.setter
-    def session(self, session):
-        self.__session = session
+    @rcon.setter
+    def rcon(self, session):
+        self.__rcon = session
 
 
 def connect_command(rc):

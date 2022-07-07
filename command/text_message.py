@@ -2,10 +2,10 @@ import hashlib
 import json
 
 from library.comment_parse import parse_send_message
-from model.youtube_chat_moddel import YoutubeChatModel
+from model.rcon_client_model import RconClientModel
 
 
-class TextMessage(YoutubeChatModel):
+class TextMessage(RconClientModel):
     """
     メッセージ受信時の処理
     """
@@ -13,6 +13,8 @@ class TextMessage(YoutubeChatModel):
     def __init__(self, rcon):
         super().__init__(rcon)
         self.__rcon = rcon
+
+    pass
 
     def send_data_command(self, chat):
         """
