@@ -25,7 +25,6 @@ def main():
     global chat
     chat = pytchat.create(video_id=YOUTUBE_VIDEO_ID, logger=config.logger(__name__, logging.DEBUG))
     rc = RconServer()
-    rc.connect()
     try:
         rc.connect()
         connect_command(rc)
