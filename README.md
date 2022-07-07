@@ -16,14 +16,10 @@ command フォルダの中身のClassを拡張することで送信内容を変�
     * スーパチャット
 * newSponsor
     * 新規メンバー登録
-* giftRedemption 【不安定】
+* giftRedemption
     * メンバーシップギフト受け取り
-* giftPurchase 【不安定】
+* giftPurchase
     * メンバーシップギフト送信
-* donation 【不安定】
-    * Youtubeドネーション(募金)
-
-
 
 
 ## Demo
