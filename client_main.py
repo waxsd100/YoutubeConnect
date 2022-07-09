@@ -74,15 +74,15 @@ async def gateway_exec():
                     continue
                 pass
 
-                # 放送者判定
-                is_chat_owner = c.author.isVerified
-                # 公式バッチ持ち判定
-                is_verified = c.author.isVerified
-                # メンバーシップ判定
-                is_chat_sponsor = c.author.isVerified
-                # モデレーター判定
-                is_chat_moderator = c.author.isVerified
-                
+                # # 放送者判定
+                # is_chat_owner = c.author.isVerified
+                # # 公式バッチ持ち判定
+                # is_verified = c.author.isVerified
+                # # メンバーシップ判定
+                # is_chat_sponsor = c.author.isVerified
+                # # モデレーター判定
+                # is_chat_moderator = c.author.isVerified
+
                 user_name = replace_space_to_mcspace(c.author.name)
                 channel_name = replace_space_to_mcspace(cn)
 

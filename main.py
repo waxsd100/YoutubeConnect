@@ -40,7 +40,7 @@ def main():
                 elif chat_type == ChatType.TEXT_MESSAGE.value:
                     # 通常チャット送信時のClass呼び出し処理
                     text_message = TextMessage(rc)
-                    text_message.send_data_command(c, cid, cn)
+                    text_message.send_view_chat_command(c, cid, cn)
                     pass
                 elif chat_type == ChatType.SUPER_STICKER.value:
                     # スーパスティッカー送信時のClass呼び出し処理
