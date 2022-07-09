@@ -6,8 +6,8 @@ LiveToMineServer(L2MS)
 Youtube の Live配信からMinecraft Serverにコマンドを送信します。  
 command フォルダの中身のClassを拡張することで送信内容を変更することができます。
 
-
 ### 取得できるイベント一覧:
+
 * textMessage
     * 通常のチャットメッセージ
 * superSticker
@@ -20,7 +20,6 @@ command フォルダの中身のClassを拡張することで送信内容を変�
     * メンバーシップギフト受け取り
 * giftPurchase
     * メンバーシップギフト送信
-
 
 ## Demo
 

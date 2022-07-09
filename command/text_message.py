@@ -1,7 +1,7 @@
 import hashlib
 import json
 
-from library.comment_parse import parse_send_message
+from library.comment_parse import parse_send_message, replace_space_to_mcspace
 from model.rcon_client_model import RconClientModel
 
 
@@ -16,7 +16,7 @@ class TextMessage(RconClientModel):
 
     pass
 
-    def send_data_command(self, chat):
+    def send_data_command(self, chat, channel_id, channel_name):
         """
         Datapack へのコマンド送信用処理
         :param chat: チャットデータ(データ定義はReadme参照)
@@ -28,7 +28,16 @@ class TextMessage(RconClientModel):
         # id: ユーザごとのUUID
         # name: ユーザネーム
         # text: 送信データ
-        message = {'from': 'YouTube', 'id': id, 'name': chat.author.name, 'text': [parse_send_message(chat.message)]}
+
+        message = {
+            'from': 'YouTube',
+            'channel_id': channel_id,
+            'channel_name': replace_space_to_mcspace(channel_name),
+            'chat_type': chat.type,
+            'id': id,
+            'name': replace_space_to_mcspace(chat.author.name),
+            'text': [parse_send_message(chat.message)]
+        }
         data = json.dumps(message, ensure_ascii=False)
         if message is not None:
             rc.exec(f"data modify storage mc_comment_viewer: new_comments append value {data}")

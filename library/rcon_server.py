@@ -2,7 +2,7 @@ from time import sleep
 
 from mcrcon import MCRcon
 
-from const import RCON_HOST, RCON_PASSWORD, RCON_PORT, RCON_TIMEOUT, YOUTUBE_VIDEO_ID
+from const import RCON_HOST, RCON_PASSWORD, RCON_PORT, RCON_TIMEOUT
 
 
 class RconServer:
@@ -13,13 +13,13 @@ class RconServer:
     def connect(self):
         self.__rcon.connect()
 
-    def reconnect(self, session, is_force):
+    def reconnect(self, rcon, is_force):
         if is_force:
             self.__rcon.disconnect()
             sleep(3)
             self.__rcon.connect()
         else:
-            self.__rcon = session
+            self.__rcon = rcon
 
     def exec(self, cmd):
         self.__rcon.command(cmd)
@@ -36,22 +36,24 @@ class RconServer:
         self.__rcon = session
 
 
-def connect_command(rc):
+def connect_command(rc, cmd):
     """
     初回コマンド送信用
     :param rc: mcrcon instance
-    :return: mcr response
+    :param cmd: send command
+    :return: rcon response
     """
     # pass
-    return rc.exec(f"say [Debug] Connect Server: https://www.youtube.com/watch?v={YOUTUBE_VIDEO_ID}")
+    return rc.exec(cmd)
     # return mcrcon.command(f"function #mc_comment_viewer:on")
 
 
-def disconnect_command(rc):
+def disconnect_command(rc, cmd):
     """
-    初回コマンド送信用
-    :param mcr: mcrcon instance
-    :return: mcr response
+    終了コマンド送信用
+    :param rc: mcrcon instance
+    :param cmd: send command
+    :return: rcon response
     """
-    return rc.exec(f"say [Debug] Disconnect Server: https://www.youtube.com/watch?v={YOUTUBE_VIDEO_ID}")
+    return rc.exec(cmd)
     # return mcrcon.command(f"function #mc_comment_viewer:on")

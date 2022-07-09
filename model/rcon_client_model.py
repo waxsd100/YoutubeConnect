@@ -12,10 +12,8 @@ class RconClientModel:
         data = chat.json()
         rc.exec(f"say {data}")
 
-    @property
-    def rcon(self):
-        return self.__rcon
-
-    @rcon.setter
-    def rcon(self, rcon):
-        self.__rcon = rcon
+    def send_command(self, command):
+        rc = self.__rcon
+        if command is None:
+            return None
+        return rc.exec(command)

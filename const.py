@@ -5,14 +5,17 @@ Copyright © 2021 wakokara
 This software is released under the MIT License, see LICENSE.
 """
 
-# Youtube Video ID
-YOUTUBE_VIDEO_ID = ["############", "############"]
+# Gateway Data channel list
+CHANNELS = {
+    0: {"channel_name": "########", "channel_id": "########", "video_id": "###########"},
+    1: {"channel_name": "########", "channel_id": "########", "video_id": "###########"},
+    2: {"channel_name": "########", "channel_id": "########", "video_id": "###########"},
+}
 
-# Gateway Data channel Id
-CHANNEL_ID = ["############", "############"]
+API_ENDPOINT = "http://127.0.0.1:8000/send"
 
-# Gateway Data channel Name
-CHANNEL_NAME = ["############", "############"]
+# Gateway Server Timeout
+API_TIMEOUT = 300
 
 # 送信されるときのスペース文字の置換後文字列
 SPACE_STRING = "␣"
@@ -30,7 +33,4 @@ RCON_PASSWORD = "my_password"
 RCON_TIMEOUT = 5
 
 # Debug
-isOpenBrowser = False
-
-# Gateway Server Timeout
-API_TIMEOUT = 60
+isOpenBrowser = True

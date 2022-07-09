@@ -1,6 +1,9 @@
 emoji==1.6.1
 mcrcon==0.7.0
 selenium==4.0.0
-pytchat@git+https://github.com/waxsd100/pytchat.git@v0.6.1#egg=pytchat
 backoff==2.1.2
 requests==2.28.1
+pytchat@git+https://github.com/waxsd100/pytchat.git@v0.6.1#egg=pytchat
+fastapi~=0.78.0
+pydantic~=1.9.1
+starlette~=0.19.1
