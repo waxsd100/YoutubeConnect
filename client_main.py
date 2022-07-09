@@ -68,6 +68,11 @@ async def gateway_exec():
                 ukey += 1
                 id = hashlib.md5(c.id.encode()).hexdigest()
                 send_text = parse_send_message(c.message)
+                if send_text is None:
+                    # パースした結果全て空白だった場合送信しない
+                    print(f"[{c.datetime}] This message was not sent: {chat.author.name} {c.message}")
+                    continue
+
                 command_data = json.dumps({
                     'from': 'YouTube',
                     'channel_id': cid,
@@ -82,8 +87,8 @@ async def gateway_exec():
                 message = f"say {replace_space_to_mcspace(cn)} [{replace_space_to_mcspace(c.author.name)}]: {send_text}"
                 data = {"id": ukey, "dt": c.datetime, "vid": vid, "payload": message}
                 response = send_data(session, API_ENDPOINT, headers, data, API_TIMEOUT)
-                response_json = response.json()
 
+                response_json = response.json()
                 response_id = response_json["id"]
 
                 if ukey == response_id:
@@ -110,14 +115,17 @@ async def gateway_exec():
 
 if __name__ == '__main__':
     global vid, cid, cn
-    print("Start")
-    print(f"受信する放送を選んでください (0 ~ {len(CHANNELS) - 1})")
+    print(f"受信する放送を選んでください (0 ～ {len(CHANNELS) - 1})")
     for k in CHANNELS:
         print(f'{k} : {CHANNELS[k]["channel_name"]} / https://www.youtube.com/watch?v={CHANNELS[k]["video_id"]}')
 
-    TARGET_ID = int(input('Enter number: '))
+    TARGET_ID = int(input(f'Enter number: '))
+    if TARGET_ID > len(CHANNELS) - 1:
+        print(f"The input content is abnormal (0 ～ {len(CHANNELS) - 1}): {TARGET_ID}", file=sys.stderr)
+        exit(1)
+
     vid = CHANNELS[TARGET_ID]["video_id"]
     cid = CHANNELS[TARGET_ID]["channel_id"]
     cn = CHANNELS[TARGET_ID]["channel_name"]
-
+    print("Start")
     asyncio.run(gateway_exec())

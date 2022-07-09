@@ -15,7 +15,7 @@ def parse_send_message(message):
     message = emoji.emojize(message, use_aliases=True)
     message = delete_emoji_message(message)
     message = replace_space_to_mcspace(message)
-    if message and message.strip() and message != SPACE_STRING:
+    if message and message.strip() and message != SPACE_STRING and is_only_mcspace(message) == False:
         return message
     return None
 
@@ -57,7 +57,7 @@ def trim_message(message):
 
 def delete_emoji_message(message):
     """
-    :emoji:形式のemoji を削除する
+    :emoji:形式のemoji をスペースへ変換する
     :param message:
     :return:
     """
@@ -83,3 +83,13 @@ def replace_space_to_mcspace(message):
     :return:
     """
     return message.replace(' ', SPACE_STRING)
+
+
+def is_only_mcspace(message):
+    """
+    メッセージ内容がMinecraftSpace のみかを判定する
+    :param message:
+    :return:
+    """
+    m = message.strip(SPACE_STRING)
+    return len(m) == 0
