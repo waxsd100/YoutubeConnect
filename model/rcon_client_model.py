@@ -5,6 +5,7 @@ class RconClientModel:
     """
 
     def __init__(self, rcon):
+        self.callback_function = None
         self.__rcon = rcon
 
     def send_view_chat_command(self, chat):
@@ -17,3 +18,13 @@ class RconClientModel:
         if command is None:
             return None
         return rc.exec(command)
+
+    # TODO @see https://qiita.com/seigot/items/5a6893340823511a47e3
+    # これでスパチャとか云々カンヌンをどうにかする
+    def register_callback_function(self, func):
+        self.callback_function = func
+
+    def call_callback_function(self):
+        if self.callback_function is None:
+            return None
+        return self.callback_function()

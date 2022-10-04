@@ -16,9 +16,7 @@ from const import API_ENDPOINT, \
     CHANNELS, API_TIMEOUT, isOpenBrowser
 from library.browser_util import get_web_driver, open_browser
 from library.comment_parse import parse_send_message, replace_space_to_mcspace
-
-global TARGET_ID
-global chat, vid, cid, cn
+from library.util import get_current_time
 
 
 def resend(function):
@@ -52,9 +50,9 @@ def send_data(session, url, headers, json, timeout):
     )
 
 
-async def gateway_exec():
-    global chat, TARGET_ID
+async def gateway_exec(cn, cid, vid):
     try:
+        print(f"[{get_current_time()}] Start:[{cn}] https://www.youtube.com/watch?v={vid}")
         session = requests.Session()
         chat = pytchat.create(video_id=vid, logger=config.logger(__name__, logging.DEBUG))
         ukey = 0
@@ -74,14 +72,14 @@ async def gateway_exec():
                     continue
                 pass
 
-                # # 放送者判定
-                # is_chat_owner = c.author.isVerified
-                # # 公式バッチ持ち判定
-                # is_verified = c.author.isVerified
-                # # メンバーシップ判定
-                # is_chat_sponsor = c.author.isVerified
-                # # モデレーター判定
-                # is_chat_moderator = c.author.isVerified
+                # 放送者判定
+                is_chat_owner = c.author.isVerified
+                # 公式バッチ持ち判定
+                is_verified = c.author.isVerified
+                # メンバーシップ判定
+                is_chat_sponsor = c.author.isVerified
+                # モデレーター判定
+                is_chat_moderator = c.author.isVerified
 
                 user_name = replace_space_to_mcspace(c.author.name)
                 channel_name = replace_space_to_mcspace(cn)
@@ -102,7 +100,7 @@ async def gateway_exec():
                 message = f"say {channel_name} [{user_name}]: {send_text}"
 
                 # Gatewayへの送信データを定期
-                data = {"id": ukey, "dt": c.datetime, "vid": vid, "payload": message}
+                data = {"id": ukey, "dt": c.datetime, "video_id": vid, "channel_id": cid, "payload": message}
 
                 # Gatewayへデータ送信
                 response = send_data(session, API_ENDPOINT, headers, data, API_TIMEOUT)
@@ -112,16 +110,19 @@ async def gateway_exec():
                 if ukey == response_id:
                     if response.status_code == requests.codes.ok:
                         # 成功時
-                        print(f"[{c.datetime}]  {ukey} {id} {c.type} {c.author.name}: {c.message} {c.amountString}")
+                        print(
+                            f"{response.status_code} [{c.datetime}] {ukey} {id} {c.type} {c.author.name}: {c.message} {c.amountString}")
                     elif response.status_code == 400:
                         # 送信したデータに異常がある
-                        print(f"No send Message: {chat.author.name} / {chat.message}", file=sys.stderr)
+                        print(f"{response.status_code} No send Message: {chat.author.name} / {chat.message}",
+                              file=sys.stderr)
                     else:
                         # サーバ上でexceptionが発生した
-                        print(f"Gateway Server Error: {chat.author.name} / {chat.message}", file=sys.stderr)
+                        print(f"{response.status_code} Gateway Server Error: {chat.author.name} / {chat.message}",
+                              file=sys.stderr)
                 else:
                     # 送信したデータとレスポンスが一致していない(データ抜けの可能性)
-                    print(f"Send ID is missmatch: {response_json}", file=sys.stderr)
+                    print(f"{response.status_code} Send ID is missmatch: {response_json}", file=sys.stderr)
     except Exception as e:
         print(type(e), str(e), file=sys.stderr)
     finally:
@@ -129,21 +130,31 @@ async def gateway_exec():
         if isOpenBrowser:
             driver.close()
             driver.quit()
+    return
+
+
+def main():
+    loop = asyncio.get_event_loop()
+    tasks = []
+    for k in CHANNELS:
+        cn = CHANNELS[k]["channel_name"]
+        cid = CHANNELS[k]["channel_id"]
+        vid = CHANNELS[k]["video_id"]
+        tasks.append(gateway_exec(cn, cid, vid))
+    res = asyncio.gather(*tasks, return_exceptions=True)
+    loop.run_until_complete(res)
+
+    # TARGET_ID = int(input(f'Enter number: '))
+    # if TARGET_ID > len(CHANNELS) - 1:
+    #     print(f"The input content is abnormal (0 ～ {len(CHANNELS) - 1}): {TARGET_ID}", file=sys.stderr)
+    #     exit(1)
+    #
+    # vid = CHANNELS[TARGET_ID]["video_id"]
+    # cid = CHANNELS[TARGET_ID]["channel_id"]
+    # cn = CHANNELS[TARGET_ID]["channel_name"]
+    # print("Start")
+    # asyncio.run(gateway_exec())
 
 
 if __name__ == '__main__':
-    global vid, cid, cn
-    print(f"受信する放送を選んでください (0 ～ {len(CHANNELS) - 1})")
-    for k in CHANNELS:
-        print(f'{k} : {CHANNELS[k]["channel_name"]} / https://www.youtube.com/watch?v={CHANNELS[k]["video_id"]}')
-
-    TARGET_ID = int(input(f'Enter number: '))
-    if TARGET_ID > len(CHANNELS) - 1:
-        print(f"The input content is abnormal (0 ～ {len(CHANNELS) - 1}): {TARGET_ID}", file=sys.stderr)
-        exit(1)
-
-    vid = CHANNELS[TARGET_ID]["video_id"]
-    cid = CHANNELS[TARGET_ID]["channel_id"]
-    cn = CHANNELS[TARGET_ID]["channel_name"]
-    print("Start")
-    asyncio.run(gateway_exec())
+    main()

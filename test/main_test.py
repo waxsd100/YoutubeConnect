@@ -50,6 +50,10 @@ class MessageTestCase(unittest.TestCase):
                          msg=':pig:"H:youtube:🍣Θ👅Θ🍣')
         self.assertEqual('{from:"YouTube",name:"ApexCup06",text:["🐷␣H␣🍣Θ👅Θ🍣"]}', t)
 
+    def test_is_answer_message(self):
+        # TODO is_answer のテストコードを書く
+        pass
+
 
 def exec_message(outer, msg):
     message = make_send_json(outer, parse_send_message(msg))

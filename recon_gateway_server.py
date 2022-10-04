@@ -18,7 +18,8 @@ async def root():
 class Comment(BaseModel):
     id: int
     dt: str
-    vid: str
+    video_id: str
+    channel_id: str
     payload: str
 
 
@@ -37,7 +38,7 @@ async def send(comment: Comment):
         if comment.dt is None:
             return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST,
                                 content={"error": "dt is not set."})
-        if comment.vid is None:
+        if comment.video_id is None:
             return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST,
                                 content={"error": "vid is not set."})
         if comment.payload is None:
@@ -45,12 +46,14 @@ async def send(comment: Comment):
                                 content={"error": "payload is not set."})
         id = comment.id
         dt = comment.dt
-        vid = comment.vid
+        vid = comment.video_id
+        cid = comment.channel_id
         payload = comment.payload
+        # TODO スパチャなど対応する
         client.send_command(f"{comment.payload}")
         print(f"{vid} {id}: {dt} {payload}")
         return JSONResponse(status_code=status.HTTP_200_OK,
-                            content={"id": id, "dt": dt, "vid": vid, "payload": payload})
+                            content={"id": id, "dt": dt, "video_id": vid, "channel_id": cid, "payload": payload})
     except Exception as e:
         print(type(e), str(e))
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
