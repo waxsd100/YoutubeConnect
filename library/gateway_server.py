@@ -27,6 +27,16 @@ def resend(function):
     return wrapped
 
 
+@resend
+def send_data(session, url, headers, json, timeout):
+    return session.post(
+        url=url,
+        headers=headers,
+        json=json,
+        timeout=timeout
+    )
+
+
 class GatewayServer:
 
     def __init__(self):

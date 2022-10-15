@@ -1,13 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import asyncio
-import functools
 import hashlib
 import json
 import logging
 import sys
 
-import backoff
 import pytchat
 import requests
 from pytchat import config
@@ -16,46 +14,17 @@ from const import API_ENDPOINT, \
     CHANNELS, API_TIMEOUT, isOpenBrowser
 from library.browser_util import get_web_driver, open_browser
 from library.comment_parse import parse_send_message, replace_space_to_mcspace
+from library.gateway_server import GatewayServer
 from library.util import get_current_time
-
-
-def resend(function):
-    @functools.wraps(function)
-    def wrapped(*args, **kwargs):
-        def fatal_code(e):
-            """Too many Requests(429)のときはリトライする。それ以外の4XXはretryしない"""
-            if e.response is None:
-                return True
-            code = e.response.status_code
-            return 400 <= code < 500 and code != 429
-
-        return backoff.on_exception(
-            backoff.expo,
-            requests.exceptions.RequestException,
-            jitter=backoff.full_jitter,
-            max_time=300,
-            giveup=fatal_code
-        )(function)(*args, **kwargs)
-
-    return wrapped
-
-
-@resend
-def send_data(session, url, headers, json, timeout):
-    return session.post(
-        url=url,
-        headers=headers,
-        json=json,
-        timeout=timeout
-    )
 
 
 async def gateway_exec(cn, cid, vid):
     try:
         print(f"[{get_current_time()}] Start:[{cn}] https://www.youtube.com/watch?v={vid}")
+        gw = GatewayServer()
         session = requests.Session()
         chat = pytchat.create(video_id=vid, logger=config.logger(__name__, logging.DEBUG))
-        ukey = 0
+        u_key = 0
         headers = {}
         if isOpenBrowser:
             driver = get_web_driver()
@@ -63,7 +32,7 @@ async def gateway_exec(cn, cid, vid):
 
         while chat.is_alive():
             async for c in chat.get().async_items():
-                ukey += 1
+                u_key += 1
                 id = hashlib.md5(c.id.encode()).hexdigest()
                 send_text = parse_send_message(c.message)
                 if send_text is None:
@@ -72,14 +41,14 @@ async def gateway_exec(cn, cid, vid):
                     continue
                 pass
 
-                # 放送者判定
-                is_chat_owner = c.author.isVerified
-                # 公式バッチ持ち判定
-                is_verified = c.author.isVerified
-                # メンバーシップ判定
-                is_chat_sponsor = c.author.isVerified
-                # モデレーター判定
-                is_chat_moderator = c.author.isVerified
+                # # 放送者判定
+                # is_chat_owner = c.author.isVerified
+                # # 公式バッチ持ち判定
+                # is_verified = c.author.isVerified
+                # # メンバーシップ判定
+                # is_chat_sponsor = c.author.isVerified
+                # # モデレーター判定
+                # is_chat_moderator = c.author.isVerified
 
                 user_name = replace_space_to_mcspace(c.author.name)
                 channel_name = replace_space_to_mcspace(cn)
@@ -100,18 +69,18 @@ async def gateway_exec(cn, cid, vid):
                 message = f"say {channel_name} [{user_name}]: {send_text}"
 
                 # Gatewayへの送信データを定期
-                data = {"id": ukey, "dt": c.datetime, "video_id": vid, "channel_id": cid, "payload": message}
+                data = {"id": u_key, "dt": c.datetime, "video_id": vid, "channel_id": cid, "payload": message}
 
                 # Gatewayへデータ送信
-                response = send_data(session, API_ENDPOINT, headers, data, API_TIMEOUT)
+                response = gw.post_json(session, API_ENDPOINT, headers, data, API_TIMEOUT)
                 response_json = response.json()
                 response_id = response_json["id"]
 
-                if ukey == response_id:
+                if u_key == response_id:
                     if response.status_code == requests.codes.ok:
                         # 成功時
                         print(
-                            f"{response.status_code} [{c.datetime}] {ukey} {id} {c.type} {c.author.name}: {c.message} {c.amountString}")
+                            f"{response.status_code} [{c.datetime}] {u_key} {id} {c.type} {c.author.name}: {c.message} {c.amountString}")
                     elif response.status_code == 400:
                         # 送信したデータに異常がある
                         print(f"{response.status_code} No send Message: {chat.author.name} / {chat.message}",
