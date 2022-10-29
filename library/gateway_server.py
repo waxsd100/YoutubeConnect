@@ -37,7 +37,7 @@ class GatewayServer:
         return self.__session.post(
             url=url,
             headers=headers,
-            data=data,
+            json=data,
             timeout=API_TIMEOUT
         )
 
