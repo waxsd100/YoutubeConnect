@@ -7,12 +7,10 @@ This software is released under the MIT License, see LICENSE.
 
 # Gateway Data channel list
 CHANNELS = {
-    0: {"channel_name": "########", "channel_id": "########", "video_id": "###########"},
-    1: {"channel_name": "########", "channel_id": "########", "video_id": "###########"},
-    2: {"channel_name": "########", "channel_id": "########", "video_id": "###########"},
+    0: {"channel_name": "########", "channel_id": "########", "video_id": "lJA41wKuyzA"},
 }
 
-API_ENDPOINT = "http://127.0.0.1:8000/send"
+API_ENDPOINT = "http://127.0.0.1:8000"
 
 # Gateway Server Timeout
 API_TIMEOUT = 300
@@ -34,3 +32,6 @@ RCON_TIMEOUT = 5
 
 # Debug
 isOpenBrowser = True
+
+# Number of retries on failure(TODO 未実装）
+MAX_RETRY = 3

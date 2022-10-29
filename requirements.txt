@@ -7,3 +7,4 @@ pytchat@git+https://github.com/waxsd100/pytchat.git@v0.6.1#egg=pytchat
 fastapi~=0.78.0
 pydantic~=1.9.1
 starlette~=0.19.1
+uvicorn~=0.18.3

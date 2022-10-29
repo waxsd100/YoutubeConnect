@@ -1,5 +1,6 @@
+import json
+
 from fastapi import FastAPI
-from pydantic import BaseModel
 from starlette import status
 from starlette.responses import JSONResponse
 
@@ -7,6 +8,7 @@ from library.rcon_server import RconServer
 from model.rcon_client_model import RconClientModel
 
 app = FastAPI()
+global client
 
 
 @app.get("/")
@@ -14,23 +16,39 @@ async def root():
     return {"message": "Hello World"}
 
 
-# リクエストbodyを定義
-class Comment(BaseModel):
-    id: int
-    dt: str
-    video_id: str
-    channel_id: str
-    payload: str
+@app.post("/")
+async def root():
+    return {"message": "Hello World"}
 
 
-rc = RconServer()
-rc.connect()
-client = RconClientModel(rc)
+@app.post("/open")
+async def open():
+    global client
+    rc = RconServer()
+    rc.connect()
+    client = RconClientModel(rc)
 
 
-@app.post("/send")
+@app.post("/close")
+async def close():
+    global client
+    rc = RconServer()
+    rc.disconnect()
+    client = RconClientModel(rc)
+
+
+@app.post("/ping")
+async def ping(c):
+    print(json.dumps(c))
+    print(f"[{c.datetime}] {c.type} {c.author.name}: {c.message} {c.amountString}")
+    return JSONResponse(status_code=status.HTTP_200_OK,
+                        content=c)
+
+
+@app.post("/send/{comment}")
 # x_channel_id: Union[str, None] = Header(default=None)
-async def send(comment: Comment):
+async def send(comment: dict, send_media: str):
+    global client
     try:
         if comment.id is None:
             return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST,
