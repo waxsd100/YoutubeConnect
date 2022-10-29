@@ -17,7 +17,7 @@ from library.util import get_current_time
 global retry
 
 
-async def create_chat(cn, vid):
+async def create_chat(cn, vid, func, *args):
     loop = asyncio.get_running_loop()
     chat = None
     try:
@@ -31,8 +31,11 @@ async def create_chat(cn, vid):
         while chat.is_alive():
             chat.raise_for_status()
             async for c in chat.get().async_items():
+                # データごとのユニークなID(連番)
                 u_key += 1
+                # Userごと一意の固定長ID
                 uuid = hashlib.md5(c.id.encode()).hexdigest()
+                # チャットデータをもとに送信用データ作成
                 data = {
                     "id": u_key,
                     "videoId": vid,
@@ -40,9 +43,8 @@ async def create_chat(cn, vid):
                     "userId": uuid,
                     "data": json.loads(c.json())
                 }
-                # print(data)
-                await send_server(data)
-
+                # CallBack関数実行
+                await func(data, *args)
 
     except pytchat.ChatDataFinished:
         print("Chat data finished.")
@@ -76,10 +78,11 @@ async def create_chat(cn, vid):
 def main():
     loop = asyncio.get_event_loop()
     tasks = []
+    callback = send_server
     for k in CHANNELS:
         cn = CHANNELS[k]["channel_name"]
         vid = CHANNELS[k]["video_id"]
-        tasks.append(create_chat(cn, vid))
+        tasks.append(create_chat(cn, vid, callback))
     res = asyncio.gather(*tasks, return_exceptions=True)
     loop.run_until_complete(res)
 

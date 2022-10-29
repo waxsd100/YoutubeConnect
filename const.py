@@ -7,7 +7,7 @@ This software is released under the MIT License, see LICENSE.
 
 # Gateway Data channel list
 CHANNELS = {
-    0: {"channel_name": "########", "channel_id": "########", "video_id": "lJA41wKuyzA"},
+    1: {"channel_name": "sibuharu", "channel_id": "########", "video_id": "Z1YKZ8adELw"},
 }
 
 API_ENDPOINT = "http://127.0.0.1:8000"
