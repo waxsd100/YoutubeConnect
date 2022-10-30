@@ -15,7 +15,7 @@ from library.browser_util import get_web_driver, open_browser
 from library.rcon_server import RconServer
 from library.util import get_current_time
 
-global retry, rc
+global retry
 
 
 async def create_chat(cn, vid, sender_func, *args):
