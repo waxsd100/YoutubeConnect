@@ -9,15 +9,16 @@ import sys
 import pytchat
 from pytchat import config
 
-from client.send_server_client import send_server
+from client.send_rcon_client import SendRconClient
 from const import CHANNELS, isOpenBrowser
 from library.browser_util import get_web_driver, open_browser
+from library.rcon_server import RconServer
 from library.util import get_current_time
 
-global retry
+global retry, rc
 
 
-async def create_chat(cn, vid, func, *args):
+async def create_chat(cn, vid, sender_func, *args):
     loop = asyncio.get_running_loop()
     chat = None
     try:
@@ -44,12 +45,11 @@ async def create_chat(cn, vid, func, *args):
                     "data": json.loads(c.json())
                 }
                 # CallBack関数実行
-                await func(data, *args)
-
+                await sender_func(data, *args)
     except pytchat.ChatDataFinished:
         print("Chat data finished.")
     except Exception as ex:
-        # print(type(e), str(e), file=sys.stderr)
+        print(type(ex), str(ex), file=sys.stderr)
         trace = []
         tb = ex.__traceback__
         while tb is not None:
@@ -78,24 +78,21 @@ async def create_chat(cn, vid, func, *args):
 def main():
     loop = asyncio.get_event_loop()
     tasks = []
-    callback = send_server
+
+    # CallBackを指定
+    # callback = SendServerClient().send_server
+    # args = GatewayServer()
+    #
+    callback = SendRconClient.send_rcon
+    args = RconServer()
+    args.connect()
+
     for k in CHANNELS:
         cn = CHANNELS[k]["channel_name"]
         vid = CHANNELS[k]["video_id"]
-        tasks.append(create_chat(cn, vid, callback))
+        tasks.append(create_chat(cn, vid, callback, args))
     res = asyncio.gather(*tasks, return_exceptions=True)
     loop.run_until_complete(res)
-
-    # TARGET_ID = int(input(f'Enter number: '))
-    # if TARGET_ID > len(CHANNELS) - 1:
-    #     print(f"The input content is abnormal (0 ～ {len(CHANNELS) - 1}): {TARGET_ID}", file=sys.stderr)
-    #     exit(1)
-    #
-    # vid = CHANNELS[TARGET_ID]["video_id"]
-    # cid = CHANNELS[TARGET_ID]["channel_id"]
-    # cn = CHANNELS[TARGET_ID]["channel_name"]
-    # print("Start")
-    # asyncio.run(gateway_exec())
 
 
 if __name__ == '__main__':
