@@ -13,7 +13,6 @@ from client.send_rcon_client import SendRconClient
 from const import CHANNELS, isOpenBrowser
 from library.browser_util import get_web_driver, open_browser
 from library.rcon_server import RconServer
-
 from library.util import get_current_time
 
 global retry, rc
