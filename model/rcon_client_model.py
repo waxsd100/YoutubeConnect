@@ -8,23 +8,24 @@ class RconClientModel:
         self.callback_function = None
         self.__rcon = rcon
 
-    def send_view_chat_command(self, chat):
+    def send_view_chat_command(self, data: str):
+        """
+        共通メソッド 送信したテキストメッセージをSayで送信する
+        @param data: 送信テキストメッセージ
+        @return:
+        """
         rc = self.__rcon
-        data = chat.json()
         rc.exec(f"say {data}")
 
     def send_command(self, command):
+        """
+        共通メソッド 任意のコマンドメッセージを送信する( / は不要)
+        @param command:
+        @return:
+        """
         rc = self.__rcon
         if command is None:
             return None
         return rc.exec(command)
 
-    # TODO @see https://qiita.com/seigot/items/5a6893340823511a47e3
-    # これでスパチャとか云々カンヌンをどうにかする
-    def register_callback_function(self, func):
-        self.callback_function = func
-
-    def call_callback_function(self):
-        if self.callback_function is None:
-            return None
-        return self.callback_function()
+# チャットタイプに応じて実行するメソッドを変えたい場合はcommand/フォルダ配下にある子クラスで定義すること

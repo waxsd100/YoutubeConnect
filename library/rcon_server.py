@@ -22,6 +22,7 @@ class RconServer:
             self.__rcon = rcon
 
     def exec(self, cmd):
+        print(f"[SendRcon] {cmd}")
         self.__rcon.command(cmd)
 
     def disconnect(self):

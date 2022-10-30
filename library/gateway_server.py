@@ -40,15 +40,14 @@ def send_data(session, url, headers, json, timeout):
 class GatewayServer:
 
     def __init__(self):
-        self.__session = requests
-        requests.Session()
+        self.__session = requests.Session()
 
     @resend
     def post_json(self, url, headers, data):
         return self.__session.post(
             url=url,
             headers=headers,
-            data=data,
+            json=data,
             timeout=API_TIMEOUT
         )
 
