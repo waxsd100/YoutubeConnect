@@ -202,7 +202,7 @@ Structure of author object.
 
 ## Install
 
-pip install -r requirements.txt
+`pip install -r requirements.txt`
 
 ## Contribution
 
