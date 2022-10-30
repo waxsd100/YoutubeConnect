@@ -36,14 +36,15 @@ isOpenBrowser = True
 # Number of retries on failure(TODO 未実装）
 MAX_RETRY = 3
 
-# 送信するチャット文字列の全角から半角変換を無効化する (is_answer など記号チェック漏れ起きる可能性があります)
-DISABLE_ZEN_TO_HAN = False
+# 送信するチャット文字列の半角から全角変換を無効化する
+# TODO 絵文字がユニコード形式に変換されるのでコメントアウト library/comment_parse.py L21
+DISABLE_HAN_TO_ZEN = False
 
-# 全角から半角変換を無効化する(英字 / 記号)
-DISABLE_ZEN_TO_HAN_FOR_ASCII = False
+# 半角から全角変換を無効化する(英字 / 記号)
+DISABLE_HAN_TO_ZEN_FOR_ASCII = True
 
-# 全角から半角変換を無効化する(カタカナ)
-DISABLE_ZEN_TO_HAN_FOR_KANA = True
+# 半角から全角変換を無効化する(カタカナ)
+DISABLE_HAN_TO_ZEN_FOR_KANA = False
 
-# 全角から半角変換を無効化する(数字)
-DISABLE_ZEN_TO_HAN_FOR_DIGIT = False
+# 半角から全角変換を無効化する(数字)
+DISABLE_HAN_TO_ZEN_FOR_DIGIT = False

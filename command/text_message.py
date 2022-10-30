@@ -1,11 +1,7 @@
 import json
 import sys
 
-import mojimoji
-
-from const import DISABLE_ZEN_TO_HAN_FOR_ASCII, DISABLE_ZEN_TO_HAN_FOR_DIGIT, DISABLE_ZEN_TO_HAN_FOR_KANA, \
-    DISABLE_ZEN_TO_HAN
-from library.comment_parse import parse_send_message, replace_space_to_mcspace
+from library.comment_parse import parse_send_message, replace_space_to_mcspace, replace_zenkaku_to_hankaku
 from library.rcon_server import RconServer
 from model.rcon_client_model import RconClientModel
 
@@ -34,19 +30,24 @@ class TextMessage(RconClientModel):
         rc = self.__rcon
         send_text = parse_send_message(chat['data']['message'])
 
-        if DISABLE_ZEN_TO_HAN is False:
-            send_text = mojimoji.zen_to_han(send_text, ascii=DISABLE_ZEN_TO_HAN_FOR_ASCII,
-                                            kana=DISABLE_ZEN_TO_HAN_FOR_KANA,
-                                            digit=DISABLE_ZEN_TO_HAN_FOR_DIGIT)
-
-        if send_text is None:
+        if send_text is None and send_text is not "":
             print(f"Chat Text is Empty: {chat['data']['message']}", file=sys.stderr)
+        elif send_text is "":
+            print(f"Chat Text is Empty: {chat}", file=sys.stderr)
         else:
             is_answer = False
-
-            if send_text[0] == "#":
+            if replace_zenkaku_to_hankaku(send_text[0]) == "#":
                 is_answer = True
                 send_text = send_text.removeprefix("#")
+
+            # 放送者判定
+            is_chat_owner = chat['data']["author"]["isChatOwner"]
+            # 公式バッチ持ち判定
+            is_verified = chat['data']["author"]["isVerified"]
+            # メンバーシップ判定
+            is_chat_sponsor = chat['data']["author"]["isChatSponsor"]
+            # モデレーター判定
+            is_chat_moderator = chat['data']["author"]["isChatModerator"]
 
             message = {
                 'from': 'YouTube',
@@ -55,7 +56,11 @@ class TextMessage(RconClientModel):
                 'user_id': chat['userId'],
                 'name': replace_space_to_mcspace(chat['data']['author']['name']),
                 'text': [send_text],  # TODO Arrayから普通のStringにしたい
-                'is_answer': is_answer
+                'is_answer': is_answer,
+                'is_chat_owner': is_chat_owner,
+                'is_verified': is_verified,
+                'is_chat_sponsor': is_chat_sponsor,
+                'is_chat_moderator': is_chat_moderator,
             }
             data = json.dumps(message, ensure_ascii=False)
             if message is not None:

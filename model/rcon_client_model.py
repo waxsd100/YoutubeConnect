@@ -8,7 +8,7 @@ class RconClientModel:
         self.callback_function = None
         self.__rcon = rcon
 
-    def send_view_chat_command(self, data: str):
+    def send_view_chat_command(self, data):
         """
         共通メソッド 送信したテキストメッセージをSayで送信する
         @param data: 送信テキストメッセージ
