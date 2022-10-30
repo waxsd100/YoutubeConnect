@@ -41,7 +41,7 @@ MAX_RETRY = 3
 DISABLE_HAN_TO_ZEN = False
 
 # 半角から全角変換を無効化する(英字 / 記号)
-DISABLE_HAN_TO_ZEN_FOR_ASCII = True
+DISABLE_HAN_TO_ZEN_FOR_ASCII = False
 
 # 半角から全角変換を無効化する(カタカナ)
 DISABLE_HAN_TO_ZEN_FOR_KANA = False

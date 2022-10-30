@@ -1,7 +1,7 @@
 import json
 import sys
 
-from library.comment_parse import parse_send_message, replace_space_to_mcspace, replace_zenkaku_to_hankaku
+from library.comment_parse import parse_send_message, replace_space_to_mcspace, replace_hankaku_to_zenkaku
 from library.rcon_server import RconServer
 from model.rcon_client_model import RconClientModel
 
@@ -36,9 +36,9 @@ class TextMessage(RconClientModel):
             print(f"Chat Text is Empty: {chat}", file=sys.stderr)
         else:
             is_answer = False
-            if replace_zenkaku_to_hankaku(send_text[0]) == "#":
+            if replace_hankaku_to_zenkaku(send_text[0]) == "＃":
                 is_answer = True
-                send_text = send_text.removeprefix("#")
+                send_text = send_text.removeprefix("＃")
 
             # 放送者判定
             is_chat_owner = chat['data']["author"]["isChatOwner"]
