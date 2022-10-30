@@ -1,8 +1,10 @@
 import re
 
 import emoji
+import mojimoji
 
-from const import SPACE_STRING
+from const import SPACE_STRING, DISABLE_HAN_TO_ZEN, DISABLE_HAN_TO_ZEN_FOR_KANA, DISABLE_HAN_TO_ZEN_FOR_DIGIT, \
+    DISABLE_HAN_TO_ZEN_FOR_ASCII
 
 
 def parse_send_message(message):
@@ -15,13 +17,21 @@ def parse_send_message(message):
     message = emoji.emojize(message, use_aliases=True)
     message = delete_emoji_message(message)
     message = replace_space_to_mcspace(message)
-    if message and message.strip() and message != SPACE_STRING and is_only_mcspace(message) == False:
+
+    if DISABLE_HAN_TO_ZEN is False:
+        message = replace_hankaku_to_zenkaku(message,
+                                             DISABLE_HAN_TO_ZEN_FOR_ASCII,
+                                             DISABLE_HAN_TO_ZEN_FOR_KANA,
+                                             DISABLE_HAN_TO_ZEN_FOR_DIGIT)
+
+    if message and message.strip() and is_only_mcspace(message) == False:
         return message
     return None
 
 
 def make_send_json(author, message):
     """
+    @deprecated
     送信用Jsonデータを作成する(非推奨）
     :param author:
     :param message:
@@ -35,12 +45,45 @@ def make_send_json(author, message):
 
 def create_message(name, text):
     """
+    @deprecated
     送信用データを作成(非推奨）
     :param name:
     :param text:
     :return:
     """
     return str(f'{{from:"YouTube",name:"{name}",text:["{text}"]}}')
+
+
+def replace_zenkaku_to_hankaku(message: str, disabled_ascii=False, disabled_kana=False, disabled_digit=False):
+    """
+    メッセージを半角から全角へ変革する
+    0123 -> ０１２３
+    ｲﾛﾊﾆ -> イロハニ
+    ABC#% -> ＡＢＣ＃％
+    :param message:
+    :return:
+    @param message: 対象文字列
+    @param disabled_ascii: 英字記号を変換を無効化するか
+    @param disabled_kana: カタカナ変換を無効化するか
+    @param disabled_digit: 数値変換を無効化するか
+    """
+    return mojimoji.zen_to_han(message, ascii=disabled_ascii, kana=disabled_kana, digit=disabled_digit)
+
+
+def replace_hankaku_to_zenkaku(message: str, disabled_ascii=False, disabled_kana=False, disabled_digit=False):
+    """
+    メッセージを全角から半角へ変革する
+    ０１２３ -> 0123
+    イロハニ -> ｲﾛﾊﾆ
+    ＡＢＣ＃％ -> ABC#%
+    :param message:
+    :return:
+    @param message: 対象文字列
+    @param disabled_ascii: 英字記号を変換を無効化するか
+    @param disabled_kana: カタカナ変換を無効化するか
+    @param disabled_digit: 数値変換を無効化するか
+    """
+    return mojimoji.han_to_zen(message, ascii=disabled_ascii, kana=disabled_kana, digit=disabled_digit)
 
 
 def trim_message(message):

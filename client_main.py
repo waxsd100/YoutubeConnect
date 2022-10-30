@@ -80,16 +80,20 @@ def main():
     tasks = []
 
     # CallBackを指定
+    # ドライバーを指定
+
+    ## 特定のServerにPOSTする
     # callback = SendServerClient().send_server
     # args = GatewayServer()
-    #
+
+    ## 特定のサーバにRconで送信する
     callback = SendRconClient.send_rcon
     args = RconServer()
     args.connect()
 
     for k in CHANNELS:
-        cn = CHANNELS[k]["channel_name"]
-        vid = CHANNELS[k]["video_id"]
+        cn = k["channel_name"]
+        vid = k["video_id"]
         tasks.append(create_chat(cn, vid, callback, args))
     res = asyncio.gather(*tasks, return_exceptions=True)
     loop.run_until_complete(res)
