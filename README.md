@@ -2,7 +2,10 @@ LiveToMineServer(L2MS)
 ====
 
 
-<img src="https://user-images.githubusercontent.com/12383342/200026249-8e9f0ed3-3a97-4872-b16c-7b412ef7abe6.png" width="50%" />
+<p align="center">
+<img src="https://user-images.githubusercontent.com/12383342/200026533-15304d17-27a4-4f7a-92df-d994769dcecb.png" width="90%" />
+</p>
+
 
 ## Description
 
