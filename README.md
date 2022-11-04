@@ -4,6 +4,8 @@ LiveToMineServer(L2MS)
 ## Description
 
 Youtube の Live配信からMinecraft Serverにコマンドを送信します。  
+また、CallBackメソッドを変更することで任意のサーバに対してHTTPリクエストを送信することができます。   
+
 command フォルダの中身のClassを拡張することで送信内容を変更することができます。
 
 ### 取得できるイベント一覧:
