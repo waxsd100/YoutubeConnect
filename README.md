@@ -206,6 +206,10 @@ Structure of author object.
 
 `pip install -r requirements.txt`
 
+## Run
+
+`python client_main.py`
+
 ## Contribution
 
 [Ai-Akaishi](https://github.com/Ai-Akaishi)
