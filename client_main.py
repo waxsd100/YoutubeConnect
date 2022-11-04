@@ -5,20 +5,23 @@ import hashlib
 import json
 import logging
 import sys
+import time
 
 import pytchat
 from pytchat import config
 
 from client.send_rcon_client import SendRconClient
-from const import CHANNELS, isOpenBrowser
+from const import CHANNELS, isOpenBrowser, RETRY_COUNT
 from library.browser_util import get_web_driver, open_browser
 from library.rcon_server import RconServer
 from library.util import get_current_time
 
-global retry
+global retry_count
 
 
 async def create_chat(cn, vid, sender_func, *args):
+    global retry_count
+    was_alive = False
     loop = asyncio.get_running_loop()
     chat = None
     try:
@@ -30,6 +33,7 @@ async def create_chat(cn, vid, sender_func, *args):
             open_browser(driver=driver, url=f"https://www.youtube.com/live_chat?v={vid}")
 
         while chat.is_alive():
+            was_alive = True
             chat.raise_for_status()
             async for c in chat.get().async_items():
                 # データごとのユニークなID(連番)
@@ -72,6 +76,12 @@ async def create_chat(cn, vid, sender_func, *args):
             driver.close()
             driver.quit()
         loop.close()
+        if was_alive:
+            retry_count = 0
+            create_chat(cn, vid, sender_func, args)
+        elif retry_count < RETRY_COUNT:
+            retry_count += 1
+            create_chat(cn, vid, sender_func, args)
     return
 
 
@@ -100,4 +110,11 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    while True:
+        try:
+            main()
+            retry_count = 0
+        except:
+            retry_count += 1
+            print('retrying...' + str(retry_count))
+        time.sleep(5)

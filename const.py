@@ -33,8 +33,8 @@ RCON_TIMEOUT = 5
 # Debug
 isOpenBrowser = True
 
-# Number of retries on failure(TODO 未実装）
-MAX_RETRY = 3
+# Number of retries on failure
+RETRY_COUNT = 3
 
 # 送信するチャット文字列の半角から全角変換を無効化する
 # TODO 絵文字がユニコード形式に変換されるのでコメントアウト library/comment_parse.py L21
