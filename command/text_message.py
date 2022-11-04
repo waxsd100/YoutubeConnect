@@ -3,6 +3,7 @@ import sys
 
 from library.comment_parse import parse_send_message, replace_space_to_mcspace, replace_hankaku_to_zenkaku
 from library.rcon_server import RconServer
+from library.util import unicode_width
 from model.rcon_client_model import RconClientModel
 
 
@@ -28,17 +29,22 @@ class TextMessage(RconClientModel):
         # name: ユーザネーム
         # text: 送信データ
         rc = self.__rcon
-        send_text = parse_send_message(chat['data']['message'])
+        send_text = chat['data']['message']
+        send_text = parse_send_message(send_text)
 
+        # 空文字判定
         if send_text is None and send_text is not "":
+            # 送信しない文字列の場合(絵文字のみなど)
             print(f"Chat Text is Empty: {chat['data']['message']}", file=sys.stderr)
         elif send_text is "":
+            # 空文字の場合
             print(f"Chat Text is Empty: {chat}", file=sys.stderr)
         else:
+            # チェック成功時
             is_answer = False
             if replace_hankaku_to_zenkaku(send_text[0]) == "＃":
                 is_answer = True
-                send_text = send_text.removeprefix("＃")
+                send_text = send_text.removeprefix("#").removeprefix("＃")
 
             # 放送者判定
             is_chat_owner = chat['data']["author"]["isChatOwner"]
@@ -56,6 +62,7 @@ class TextMessage(RconClientModel):
                 'user_id': chat['userId'],
                 'name': replace_space_to_mcspace(chat['data']['author']['name']),
                 'text': [send_text],  # TODO Arrayから普通のStringにしたい
+                'text_width': unicode_width(send_text),
                 'is_answer': is_answer,
                 'is_chat_owner': is_chat_owner,
                 'is_verified': is_verified,

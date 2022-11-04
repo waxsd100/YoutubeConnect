@@ -3,8 +3,7 @@ import re
 import emoji
 import mojimoji
 
-from const import SPACE_STRING, DISABLE_HAN_TO_ZEN, DISABLE_HAN_TO_ZEN_FOR_KANA, DISABLE_HAN_TO_ZEN_FOR_DIGIT, \
-    DISABLE_HAN_TO_ZEN_FOR_ASCII
+from const import SPACE_STRING
 
 
 def parse_send_message(message):
@@ -18,11 +17,12 @@ def parse_send_message(message):
     message = delete_emoji_message(message)
     message = replace_space_to_mcspace(message)
 
-    if DISABLE_HAN_TO_ZEN is False:
-        message = replace_hankaku_to_zenkaku(message,
-                                             DISABLE_HAN_TO_ZEN_FOR_ASCII,
-                                             DISABLE_HAN_TO_ZEN_FOR_KANA,
-                                             DISABLE_HAN_TO_ZEN_FOR_DIGIT)
+    # 絵文字がユニコード形式に変換されるのでコメントアウト
+    # if DISABLE_HAN_TO_ZEN is False:
+    #     message = replace_hankaku_to_zenkaku(message,
+    #                                          DISABLE_HAN_TO_ZEN_FOR_ASCII,
+    #                                          DISABLE_HAN_TO_ZEN_FOR_KANA,
+    #                                          DISABLE_HAN_TO_ZEN_FOR_DIGIT)
 
     if message and message.strip() and is_only_mcspace(message) == False:
         return message

@@ -16,11 +16,11 @@ from library.browser_util import get_web_driver, open_browser
 from library.rcon_server import RconServer
 from library.util import get_current_time
 
-global retry_count
 
+# TODO retry_countがシャドーイングなので対処する
+# TODO create_chat() のリトライ呼び出しが待機(await)していない
 
-async def create_chat(cn, vid, sender_func, *args):
-    global retry_count
+async def create_chat(cn, vid, sender_func, retry_count, *args):
     was_alive = False
     loop = asyncio.get_running_loop()
     chat = None
@@ -77,11 +77,9 @@ async def create_chat(cn, vid, sender_func, *args):
             driver.quit()
         loop.close()
         if was_alive:
-            retry_count = 0
-            create_chat(cn, vid, sender_func, args)
+            create_chat(cn, vid, sender_func, 0, args)
         elif retry_count < RETRY_COUNT:
-            retry_count += 1
-            create_chat(cn, vid, sender_func, args)
+            create_chat(cn, vid, sender_func, retry_count + 1, args)
     return
 
 
@@ -104,10 +102,9 @@ def main():
     for k in CHANNELS:
         cn = k["channel_name"]
         vid = k["video_id"]
-        tasks.append(create_chat(cn, vid, callback, args))
+        tasks.append(create_chat(cn, vid, callback, 0, args))
     res = asyncio.gather(*tasks, return_exceptions=True)
     loop.run_until_complete(res)
-
 
 if __name__ == '__main__':
     while True:
@@ -118,3 +115,10 @@ if __name__ == '__main__':
             retry_count += 1
             print('retrying...' + str(retry_count))
         time.sleep(5)
+
+    # retry_count = 0
+    # while retry_count < RETRY_COUNT:
+    #     if main():
+    #         retry_count = 0
+    #     time.sleep(5)
+    #     retry_count += 1
