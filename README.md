@@ -1,8 +1,5 @@
 LiveConnect
-
-Youtubeの放送コメントをMinecraftへ
 ====
-
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/12383342/200177635-7431d7e4-af23-406d-913b-980c98d7acdd.png" width="90%" />
