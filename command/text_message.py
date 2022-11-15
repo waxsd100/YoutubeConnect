@@ -5,7 +5,7 @@ from library.comment_parse import parse_send_message, replace_space_to_mcspace, 
 from library.rcon_server import RconServer
 from library.util import unicode_width
 from model.rcon_client_model import RconClientModel
-
+from const import COMMAND_PREFIX
 
 class TextMessage(RconClientModel):
     """
@@ -31,20 +31,22 @@ class TextMessage(RconClientModel):
         rc = self.__rcon
         send_text = chat['data']['message']
         send_text = parse_send_message(send_text)
+        send_name = replace_space_to_mcspace(chat['data']['author']['name'])
 
         # 空文字判定
-        if send_text is None and send_text is not "":
+        if send_text is None and send_text != "":
             # 送信しない文字列の場合(絵文字のみなど)
             print(f"Chat Text is Empty: {chat['data']['message']}", file=sys.stderr)
-        elif send_text is "":
+        elif send_text == "":
             # 空文字の場合
             print(f"Chat Text is Empty: {chat}", file=sys.stderr)
         else:
             # チェック成功時
             is_answer = False
-            if replace_hankaku_to_zenkaku(send_text[0]) == "＃":
+            # if replace_hankaku_to_zenkaku(send_text[0]) == "＃":
+            if send_text[0] == "#" or send_text[0] == "＃" or send_text[0] == "♯":
                 is_answer = True
-                send_text = send_text.removeprefix("#").removeprefix("＃")
+                send_text = send_text.removeprefix("#").removeprefix("＃").removeprefix("♯")
 
             # 放送者判定
             is_chat_owner = chat['data']["author"]["isChatOwner"]
@@ -60,9 +62,11 @@ class TextMessage(RconClientModel):
                 'datetime': chat['data']['datetime'],
                 'channel_name': replace_space_to_mcspace(chat['channelName']),
                 'user_id': chat['userId'],
-                'name': replace_space_to_mcspace(chat['data']['author']['name']),
-                'text': [send_text],  # TODO Arrayから普通のStringにしたい
+                'name': send_name,
+                'name_width': unicode_width(send_name),
+                'text': send_text,
                 'text_width': unicode_width(send_text),
+                'chars': list(send_text),
                 'is_answer': is_answer,
                 'is_chat_owner': is_chat_owner,
                 'is_verified': is_verified,
@@ -71,6 +75,6 @@ class TextMessage(RconClientModel):
             }
             data = json.dumps(message, ensure_ascii=False)
             if message is not None:
-                rc.exec(f"data modify storage mc_comment_viewer: new_comments append value {data}")
+                rc.exec(f"{COMMAND_PREFIX}{data}")
             else:
                 print(f"No send Message: {chat['data']['author']['name']} / {chat['data']['message']}")

@@ -36,6 +36,9 @@ isOpenBrowser = True
 # Number of retries on failure
 RETRY_COUNT = 3
 
+# チャット文字列を送信するコマンド形式
+COMMAND_PREFIX = 'data modify storage comment_receiver: new_comments append value '
+
 # # 送信するチャット文字列の半角から全角変換を無効化する
 # # TODO 絵文字がユニコード形式に変換されるのでコメントアウト library/comment_parse.py L21
 # DISABLE_HAN_TO_ZEN = False
