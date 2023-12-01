@@ -7,7 +7,7 @@ This software is released under the MIT License, see LICENSE.
 
 # Gateway Data channel list
 CHANNELS = [
-    {"channel_name": "########", "video_id": "S-i967djITM"},
+    {"channel_name": "########", "video_id": "########"},
 ]
 
 API_ENDPOINT = "http://127.0.0.1:8000"
@@ -31,7 +31,7 @@ RCON_PASSWORD = "my_password"
 RCON_TIMEOUT = 5
 
 # Debug
-isOpenBrowser = True
+isOpenBrowser = False
 
 # Number of retries on failure
 RETRY_COUNT = 3
